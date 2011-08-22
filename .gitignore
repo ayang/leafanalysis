@@ -1,0 +1,6 @@
+*.ncb
+Debug
+Release
+*.user
+.aps
+
