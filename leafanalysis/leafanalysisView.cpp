@@ -201,7 +201,7 @@ LRESULT CLeafanalysisView::OnItemChanged(int /*idCtrl*/, LPNMHDR pnmh, BOOL& /*b
 
 	pinfo = _Photos.GetImageInfo(pactivate->iItem);
 
-	SendMessage(GetParent().m_hWnd, WM_USER_SELECTION_CHANGE, 0, (LPARAM)pinfo);
+	SendMessage(_hMainFrame, WM_USER_SELECTION_CHANGE, 0, (LPARAM)pinfo);
 
 	return 0;
 }

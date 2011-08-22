@@ -13,6 +13,7 @@
 
 CAppModule _Module;
 CPhotoEngine _Photos;
+HWND _hMainFrame;
 
 int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 {
@@ -28,6 +29,7 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 	}
 
 	wndMain.ShowWindow(nCmdShow);
+	_hMainFrame = wndMain.m_hWnd;
 
 	int nRet = theLoop.Run();
 

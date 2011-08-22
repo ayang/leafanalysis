@@ -53,16 +53,36 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 
 	CreateSimpleStatusBar();
 
-	m_hWndClient = m_view.Create(m_hWnd, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | LVS_ICON | LVS_ALIGNTOP | LVS_AUTOARRANGE | LVS_SHOWSELALWAYS, WS_EX_CLIENTEDGE);
-	m_property.Create(m_hWnd, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | LBS_OWNERDRAWVARIABLE, WS_EX_CLIENTEDGE);
-	m_result.Create(m_hWnd, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | ES_READONLY, WS_EX_CLIENTEDGE);
+	m_hWndClient = m_vsplitter.Create(m_hWnd, rcDefault);
+	m_hsplitter.Create(m_vsplitter, rcDefault);
+	m_paneProperty.Create(m_vsplitter, _T("属性"));
+	m_paneResult.Create(m_hsplitter,  _T("结果统计"));
+	m_view.Create(m_hsplitter, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | LVS_ICON | LVS_ALIGNTOP | LVS_AUTOARRANGE | LVS_SHOWSELALWAYS, WS_EX_CLIENTEDGE);
+	m_property.Create(m_paneProperty, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | LBS_OWNERDRAWVARIABLE, WS_EX_CLIENTEDGE);
+	m_result.Create(m_paneResult, rcDefault, NULL,  WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_HSCROLL | WS_VSCROLL | ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | ES_NOHIDESEL, WS_EX_CLIENTEDGE);
 
-	CFont* font = new CFont();
-	font->CreateFont(18,0,0,0,FW_NORMAL, 0, 0, 0,
-		DEFAULT_CHARSET,OUT_DEFAULT_PRECIS,
-		CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
-		DEFAULT_PITCH | FF_DONTCARE, L"Arial");
-	m_result.SetFont(*font, TRUE);
+	m_paneResult.SetClient(m_result);
+	m_paneProperty.SetClient(m_property);
+
+	m_hsplitter.SetSplitterPanes(m_view, m_paneResult);
+	m_vsplitter.SetSplitterPanes(m_hsplitter, m_paneProperty);
+
+	UpdateLayout();
+	m_vsplitter.SetSplitterExtendedStyle(SPLIT_RIGHTALIGNED);
+	m_hsplitter.SetSplitterExtendedStyle(SPLIT_BOTTOMALIGNED);
+
+	RECT rect;
+	m_vsplitter.GetSplitterRect(&rect);
+	m_vsplitter.SetSplitterPos(rect.right - 200);
+	m_hsplitter.SetSplitterPos(rect.bottom - 200);
+
+	m_paneProperty.SetPaneContainerExtendedStyle(PANECNT_NOCLOSEBUTTON);
+	m_paneResult.SetPaneContainerExtendedStyle(PANECNT_NOCLOSEBUTTON);
+
+
+	m_font = AtlCreateControlFont();
+	m_result.SetFont(m_font);
+
 
 	m_property.SetExtendedListStyle(PLS_EX_CATEGORIZED);
 	m_property.AddItem( PropCreateCategory(_T("图像属性")) );
@@ -211,29 +231,28 @@ LRESULT	CMainFrame::OnSelectionChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM 
 	m_property.SetItemValue(m_property.FindProperty(_T("病斑面积")), &CComVariant(pinfo->lesionsArea));
 	CString svalue;
 	svalue.Format(_T("%2.2f%%"), pinfo->lesionsArea * 100 / (float)pinfo->leafArea);
-	m_property.SetItemValue(m_property.FindProperty(_T("相对病斑面积")), &CComVariant(svalue));
+	m_property.SetItemValue(m_property.FindProperty(_T("相对病斑面积")), &CComVariant(svalue));m_property.Invalidate();
 	
 	return 0;
 }
 
-void CMainFrame::UpdateLayout(BOOL bResizeBars)
-{
-	if(!m_view.IsWindow())
-		return;
-	CRect rcClient;
-	GetClientRect(&rcClient);
-	UpdateBarsPosition(rcClient, bResizeBars);
+//void CMainFrame::UpdateLayout(BOOL bResizeBars)
+//{
+	//if(!m_view.IsWindow())
+	//	return;
+	//CRect rcClient;
+	//GetClientRect(&rcClient);
+	//UpdateBarsPosition(rcClient, bResizeBars);
 
-	CRect rcProperty = rcClient;
-	rcProperty.left = rcProperty.right - 200;
-	rcClient.right = rcProperty.left;
+	//CRect rcProperty = rcClient;
+	//rcProperty.left = rcProperty.right - 200;
+	//rcClient.right = rcProperty.left;
 
-	CRect rcResult = rcClient;
-	rcResult.top = rcResult.bottom - 180;
-	rcClient.bottom = rcResult.top;
+	//CRect rcResult = rcClient;
+	//rcResult.top = rcResult.bottom - 180;
+	//rcClient.bottom = rcResult.top;
 
-	m_property.SetWindowPos(NULL, &rcProperty, SWP_NOZORDER | SWP_NOACTIVATE);
-	m_view.SetWindowPos(NULL, &rcClient, SWP_NOZORDER | SWP_NOACTIVATE);
-	m_result.SetWindowPos(NULL, &rcResult, SWP_NOZORDER | SWP_NOACTIVATE);
-	m_result.Invalidate();
-}
+	//m_property.SetWindowPos(NULL, &rcProperty, SWP_NOZORDER | SWP_NOACTIVATE);
+	//m_result.SetWindowPos(NULL, &rcResult, SWP_NOZORDER | SWP_NOACTIVATE);
+	//m_view.SetWindowPos(NULL, &rcClient, SWP_NOZORDER | SWP_NOACTIVATE);
+//}

@@ -14,7 +14,15 @@ public:
 	CPropertyListCtrl m_property;
 	CEdit m_result;
 
+	CSplitterWindow m_vsplitter;
+	CHorSplitterWindow m_hsplitter;
+
+	CPaneContainer m_paneProperty;
+	CPaneContainer m_paneResult;
+
 	CCommandBarCtrl m_CmdBar;
+
+	CFont m_font;
 
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual BOOL OnIdle();
@@ -55,5 +63,5 @@ public:
 	LRESULT	OnSelectionChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnSampleCompute(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 
-	void UpdateLayout(BOOL /*bResizeBars*/ = TRUE);
+	//void UpdateLayout(BOOL /*bResizeBars*/ = TRUE);
 };

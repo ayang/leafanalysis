@@ -16,6 +16,7 @@
 #include <atlapp.h>
 
 extern CAppModule _Module;
+extern HWND _hMainFrame;
 
 #include <atlwin.h>
 #include <atlmisc.h>
@@ -24,9 +25,11 @@ extern CAppModule _Module;
 #include <atlctrls.h>
 #include <atldlgs.h>
 #include <atlctrlw.h>
+#include <atlctrlx.h>
 #include <atlscrl.h>
 #include <atltheme.h>
 #include <atlcrack.h>
+#include <atlsplit.h>
 
 #include <gdiplus.h>
 
