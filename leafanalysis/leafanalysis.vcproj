@@ -74,6 +74,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="gdiplus.lib opencv_core230d.lib opencv_imgproc230d.lib opencv_highgui230d.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="D:\libs\OpenCV2.3\build\x86\vc9\lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -155,9 +156,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gdiplus.lib libjasper.lib libjpeg.lib libpng.lib libtiff.lib zlib.lib opencv_core230.lib opencv_imgproc230.lib opencv_highgui230.lib"
+				AdditionalDependencies="gdiplus.lib opencv_core230.lib opencv_imgproc230.lib opencv_highgui230.lib libjasper.lib libjpeg.lib libpng.lib libtiff.lib zlib.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="D:\lib\OpenCV2.3\build\x86\vc9\staticlib"
+				AdditionalLibraryDirectories="D:\libs\OpenCV2.3\build\x86\vc9\staticlib"
 				SubSystem="2"
 				TargetMachine="1"
 			/>

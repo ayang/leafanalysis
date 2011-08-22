@@ -143,12 +143,36 @@ void CLeafanalysisView::_PopulateList(void)
 
 LRESULT CLeafanalysisView::OnSampleAdd(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
-	CFileDialog fd (TRUE, NULL, NULL, OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST, 
-		L"JPEGÍ¼Ïñ (*.jpg) \0 *.jpg\0\0", m_hWnd); 
+#define FILENAMES_BUFFER_SIZE 1024
+	TCHAR* buf_file = new TCHAR[FILENAMES_BUFFER_SIZE];
+	CString filepath;
+
+	CFileDialog fd (TRUE, NULL, NULL,
+		OFN_EXPLORER | OFN_ALLOWMULTISELECT | OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR, 
+		L"JPEGÍ¼Ïñ (*.jpg) \0 *.jpg\0\0", m_hWnd
+		); 
+	fd.m_ofn.nMaxFile = FILENAMES_BUFFER_SIZE;
+	fd.m_ofn.lpstrFile = buf_file;
+	memset(buf_file, 0, sizeof(TCHAR)*FILENAMES_BUFFER_SIZE);
 
 	if (fd.DoModal () == IDOK) 
-	{ 
-		_Photos.AddImageFile(fd.m_szFileName, fd.m_szFileTitle);
+	{
+		if(*fd.m_szFileTitle != 0)
+		{
+			_Photos.AddImageFile(buf_file, fd.m_szFileTitle);
+		}
+		else
+		{
+			LPTSTR dirname = buf_file;
+			LPTSTR filename = dirname + lstrlen(dirname) + 1;
+			while(*filename != 0)
+			{
+				filepath.Format(_T("%s\\%s"), dirname, filename);
+				_Photos.AddImageFile(filepath, filename);
+				filename += lstrlen(filename) + 1;
+			}
+		}
+
 		_PopulateList();
 	}
 
@@ -172,15 +196,13 @@ LRESULT CLeafanalysisView::OnSampleAddDirectory(WORD /*wNotifyCode*/, WORD /*wID
 
 LRESULT CLeafanalysisView::OnItemChanged(int /*idCtrl*/, LPNMHDR pnmh, BOOL& /*bHandled*/)
 {
-	LVITEM item;
 	PHOTOINFO* pinfo;
-	LPNMITEMACTIVATE pNMItemActivate = (LPNMITEMACTIVATE)pnmh;
-	item.iItem = pNMItemActivate->iItem;
-	item.iSubItem = pNMItemActivate->iSubItem;
-	GetItem(&item);
-	pinfo = (PHOTOINFO*)item.lParam;
+	LPNMITEMACTIVATE pactivate = (LPNMITEMACTIVATE)pnmh;
+
+	pinfo = _Photos.GetImageInfo(pactivate->iItem);
 
 	SendMessage(GetParent().m_hWnd, WM_USER_SELECTION_CHANGE, 0, (LPARAM)pinfo);
+
 	return 0;
 }
 
@@ -198,3 +220,9 @@ LRESULT CLeafanalysisView::OnSampleRemove(WORD /*wNotifyCode*/, WORD /*wID*/, HW
 	return 0;
 }
 
+
+LRESULT CLeafanalysisView::OnItemActivate(LPNMHDR pnmh)
+{
+
+	return 0;
+}

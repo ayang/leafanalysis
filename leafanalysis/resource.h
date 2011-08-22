@@ -7,6 +7,7 @@
 #define IDR_MAINFRAME1                  129
 #define IDB_BITMAP1                     207
 #define IDB_BITMAP2                     210
+#define IDC_EDIT1                       1000
 #define ID_32775                        32775
 #define ID_32776                        32776
 #define ID_s                            32777
@@ -22,7 +23,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        211
 #define _APS_NEXT_COMMAND_VALUE         32793
-#define _APS_NEXT_CONTROL_VALUE         1000
+#define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

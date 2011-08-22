@@ -18,4 +18,3 @@ LRESULT CAboutDlg::OnCloseCmd(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, 
 	EndDialog(wID);
 	return 0;
 }
-

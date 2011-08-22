@@ -17,6 +17,7 @@ public:
 		COMMAND_ID_HANDLER(ID_SAMPLE_ADD, OnSampleAdd)
 		COMMAND_ID_HANDLER(ID_SAMPLE_ADD_DIRECTORY, OnSampleAddDirectory)
 		REFLECTED_NOTIFY_CODE_HANDLER(LVN_ITEMCHANGED, OnItemChanged)
+		REFLECTED_NOTIFY_CODE_HANDLER_EX(LVN_ITEMACTIVATE, OnItemActivate)
 		COMMAND_ID_HANDLER(ID_SAMPLE_REMOVE, OnSampleRemove)
 	END_MSG_MAP()
 
@@ -34,4 +35,5 @@ public:
 	LRESULT OnSampleAddDirectory(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnItemChanged(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/);
 	LRESULT OnSampleRemove(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnItemActivate(LPNMHDR pnmh);
 };

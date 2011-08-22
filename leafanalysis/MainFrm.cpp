@@ -55,7 +55,7 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 
 	m_hWndClient = m_view.Create(m_hWnd, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | LVS_ICON | LVS_ALIGNTOP | LVS_AUTOARRANGE | LVS_SHOWSELALWAYS, WS_EX_CLIENTEDGE);
 	m_property.Create(m_hWnd, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | LBS_OWNERDRAWVARIABLE, WS_EX_CLIENTEDGE);
-	m_result.Create(m_hWnd, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | ES_AUTOVSCROLL | ES_MULTILINE | ES_READONLY | ES_WANTRETURN, WS_EX_CLIENTEDGE);
+	m_result.Create(m_hWnd, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | ES_READONLY, WS_EX_CLIENTEDGE);
 
 	CFont* font = new CFont();
 	font->CreateFont(18,0,0,0,FW_NORMAL, 0, 0, 0,
@@ -190,10 +190,14 @@ LRESULT CMainFrame::OnSampleCompute(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*h
 		L"标本数量：\t%d\r\n" \
 		L"叶片面积(像素)：\t平均 %d, 最大 %d, 最小 %d\r\n" \
 		L"病斑面积(像素)：\t平均 %d, 最大 %d, 最小 %d\r\n" \
-		L"相对病斑面积：\t平均 %2.2f%%, 最大 %2.2f%%, 最小 %2.2f%%\r\n";
+		L"相对病斑面积：\t平均 %2.2f%%, 最大 %2.2f%%, 最小 %2.2f%%\r\n\r\n";
 	CString message, text;
-	message.Format(temp, count, leafarea[0], leafarea[1], leafarea[2], lesionsarea[0], lesionsarea[1], lesionsarea[2], relative[0]*100, relative[1]*100, relative[2]*100);
-	m_result.SetWindowText(message);
+	message.Format(temp, count, leafarea[0], leafarea[1], leafarea[2], 
+		lesionsarea[0], lesionsarea[1], lesionsarea[2], 
+		relative[0]*100, relative[1]*100, relative[2]*100
+		);
+	m_result.Clear();
+	m_result.AppendText(message);
 	return 0;
 }
 
@@ -231,4 +235,5 @@ void CMainFrame::UpdateLayout(BOOL bResizeBars)
 	m_property.SetWindowPos(NULL, &rcProperty, SWP_NOZORDER | SWP_NOACTIVATE);
 	m_view.SetWindowPos(NULL, &rcClient, SWP_NOZORDER | SWP_NOACTIVATE);
 	m_result.SetWindowPos(NULL, &rcResult, SWP_NOZORDER | SWP_NOACTIVATE);
+	m_result.Invalidate();
 }
