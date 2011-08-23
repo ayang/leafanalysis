@@ -216,7 +216,6 @@ LRESULT CMainFrame::OnSampleCompute(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*h
 		lesionsarea[0], lesionsarea[1], lesionsarea[2], 
 		relative[0]*100, relative[1]*100, relative[2]*100
 		);
-	m_result.Clear();
 	m_result.AppendText(message);
 	return 0;
 }

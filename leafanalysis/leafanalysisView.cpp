@@ -56,7 +56,7 @@ Gdiplus::Bitmap* BitmapfromMat(cv::Mat image)
 	BITMAPINFO binfo = {0};
 	binfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 	binfo.bmiHeader.biPlanes = 1;
-	binfo.bmiHeader.biBitCount = image.elemSize()*8;
+	binfo.bmiHeader.biBitCount = image.elemSize() * 8;
 	binfo.bmiHeader.biHeight = -image.rows;
 	binfo.bmiHeader.biWidth = image.cols;
 
@@ -67,61 +67,29 @@ Gdiplus::Bitmap* BitmapfromMat(cv::Mat image)
 
 void CLeafanalysisView::_PopulateList(void)
 {
-	int cyIcon = 18 + (int)(m_cxIcon * 0.7);                                        // Height is proportionally less
-	int cyOffset = 16;                                                              // Nice large gap at top
-	double dblScale = 1.0;                                                          // Thumb is full scale
-	dblScale = 0.8;                          // Thumb with text is slightly smaller
-
 	SetRedraw(FALSE);
 
 	DeleteAllItems();
-	while( DeleteColumn(0) ) /* */;
+	while( DeleteColumn(0) );
 
 	if( !m_Images.IsNull() ) m_Images.Destroy();
-	m_Images.Create(m_cxIcon, cyIcon, ILC_COLOR32, _Photos.GetImageCount(), 0);
+	m_Images.Create(m_cxIcon, m_cxIcon * 0.8, ILC_COLOR32, _Photos.GetImageCount(), 0);
 	SetImageList(m_Images, LVSIL_NORMAL);
 
-	SetIconSpacing(m_cxIcon + 20, cyIcon + 26);
+	SetIconSpacing(m_cxIcon + 20, m_cxIcon * 0.8 + 26);
 
 	SetView(LV_VIEW_ICON);
 
 	for( int iIndex = 0; iIndex < _Photos.GetImageCount(); iIndex++ ) 
 	{
 		PHOTOINFO* pInfo = _Photos.GetImageInfo(iIndex);
-
-		// Create thumbnail icon for imagelist
 		CIcon icon;
-		int cxThumb = (int)(m_cxIcon * dblScale);
-		int cyThumb = (int)(cyIcon * dblScale);
 
-		CvSize thumbsize;
-		thumbsize.width = cxThumb;
-		thumbsize.height = cyIcon;
-		cv::Mat thumb = cv::Mat();
-		cv::resize(pInfo->image, thumb, thumbsize, 0, 0, cv::INTER_AREA);
-		//cv::namedWindow("image");cv::imshow("image", thumb);cv::waitKey();cv::destroyWindow("image");
 		Gdiplus::Bitmap* pThumb = BitmapfromMat(pInfo->image);
+		//pThumb = Gdiplus::Bitmap::FromFile(L"C:\\Users\\yang\\Desktop\\Hydrangeas.jpg");
 		pThumb->GetHICON(&icon.m_hIcon);
-
-		//Gdiplus::Image* pThumb = pInfo->pImage->GetThumbnailImage(cxThumb, cyIcon);
-
-		//if( pThumb != NULL ) {
-		//	Gdiplus::Bitmap bm24bpp(cxThumb, cyThumb); 
-		//	Gdiplus::Graphics g(&bm24bpp);
-		//	Gdiplus::Pen penShadow1(Gdiplus::Color(183,187,192));
-		//	Gdiplus::SolidBrush brBack(Gdiplus::Color(0,238,243,250));
-		//	Gdiplus::Rect rcThumb(0, 0, cxThumb, cyIcon);
-		//	g.FillRectangle(&brBack, rcThumb);
-		//	g.DrawRectangle(&penShadow1, 2, cyOffset + 1, cxThumb - 3, cyThumb - cyOffset - 2);
-		//	g.DrawImage(pThumb, 0, cyOffset, cxThumb - 2, cyThumb - cyOffset - 2); 
-		//	Gdiplus::Pen penWhite(Gdiplus::Color(255,255,255));
-		//	Gdiplus::Pen penGrey(Gdiplus::Color(228,228,228));
-		//	g.DrawRectangle(&penGrey, 0, cyOffset, cxThumb - 2, cyThumb - cyOffset - 2);
-		//	g.DrawRectangle(&penWhite, 1, cyOffset + 1, cxThumb - 4, cyThumb - cyOffset - 4);
-		//	g.DrawRectangle(&penWhite, 2, cyOffset + 2, cxThumb - 6, cyThumb - cyOffset - 6);
-		//	bm24bpp.GetHICON(&icon.m_hIcon);
-		//	delete pThumb;
-		//}
+		
+		delete pThumb;
 		m_Images.AddIcon(icon);
 
 		// Insert list item...
